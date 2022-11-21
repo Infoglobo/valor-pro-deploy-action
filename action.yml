@@ -44,7 +44,6 @@ runs:
             set +x
         }
 
-        #echo "${{ secrets.KUBE_CONFIG_DEVOPS }}" | base64 --decode > /tmp/config
         echo ${KUBE_CONFIG}  > /tmp/config
 
         export KUBECONFIG=/tmp/config 
