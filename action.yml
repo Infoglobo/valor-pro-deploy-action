@@ -97,10 +97,10 @@ runs:
         fi
         echo "*** 6"        
 
-        env | grep -v ^GITHUB | sort |
+        env | grep -v ^GITHUB | grep -v ^ACTIONS_RUNNER | sort |
         while IFS='=' read -r key value; do
         
-            replace $key $value $1
+            replace $key $value ./build/deployment.yml
         done 
 
 
