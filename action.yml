@@ -50,7 +50,7 @@ runs:
         IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
         REPO_NAME=${{ github.event.repository.name }}
 
-        if  [ uses "${IMAGE_TAG}" ]; then
+        if  uses "${IMAGE_TAG}" ; then
             echo "usando image tag informada $IMAGE_TAG"
         else
             IMAGE_TAG=$(git log --format="%h" -n 1)
