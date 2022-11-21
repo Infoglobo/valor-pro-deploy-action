@@ -96,12 +96,11 @@ runs:
             export $(grep -v '^#' $PROPERTY_FILE  | xargs)
             kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n valor
         fi
-        env | grep -v ^GITHUB | sort
+
         if  [ -f .env ]; then
             export $(grep -v '^#' .env  | xargs)
         fi
 
-        env | grep -v ^GITHUB | sort
         env | grep -v ^GITHUB | sort |
         while IFS='=' read -r key value; do
         
