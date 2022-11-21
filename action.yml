@@ -99,7 +99,7 @@ runs:
 
         #env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | sort 
         echo "*** 7"  
-        env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | sort |
+        env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | grep -v 'KUBE_'   | sort |
         while IFS='=' read -r key value; do
             if [ ! -z "$value" ]; then
               log "--> $key : $value " 
