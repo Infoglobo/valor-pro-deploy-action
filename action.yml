@@ -16,8 +16,6 @@ runs:
     - run: |
         #!/bin/bash
 
-        set -x
-        #set -e 
         function log() {
             S=$1
             echo $S | sed 's/./& /g'
@@ -56,7 +54,6 @@ runs:
             IMAGE_TAG=$(git log --format="%h" -n 1)
             echo "usando image tag gerada $IMAGE_TAG"
         fi
-        echo "*** 1"        
         export IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
 
         rm -rf ./build
@@ -68,46 +65,35 @@ runs:
         AMBIENTE=${AMBIENTE^^}
 
         SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
-        echo "*** 2"        
-        env 
-        env | grep ^$AMBIENTE
 
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
             echo $key=${value} >> $SECRET_FILE
         done 
-        echo "*** 3"
+
         kubectl delete secrets ${REPO_NAME} -n valor --ignore-not-found=true
         if [ -f $SECRET_FILE ]; then
             kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n valor
         fi
 
-
-        echo "*** 4"
         PROPERTY_FILE=enviroments/${GITHUB_REF##*/}/cm.properties
         kubectl delete configmap ${REPO_NAME} -n valor --ignore-not-found=true
         if  [ -f $PROPERTY_FILE ]; then
             export $(grep -v '^#' $PROPERTY_FILE  | xargs)
             kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n valor
         fi
-        echo "*** 5"  
+
         if  [ -f .env ]; then
             export $(grep -v '^#' .env  | xargs)
         fi
-        echo "*** 6"     
 
-        #env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | sort 
-        echo "*** 7"  
         env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | grep -v 'KUBE_'   | sort |
         while IFS='=' read -r key value; do
             if [ ! -z "$value" ]; then
-              log "--> $key : $value " 
               replace $key $value ./build/deployment.yml
-              log "<-- $key : $value " 
             fi
         done 
-
 
         echo "****"
         cat ./build/deployment.yml
