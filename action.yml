@@ -16,7 +16,7 @@ runs:
     - run: |
         #!/bin/bash
 
-        #set -x
+        set -x
         set -e 
         function log() {
             S=$1
