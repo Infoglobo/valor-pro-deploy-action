@@ -95,7 +95,9 @@ runs:
         if  [ -f .env ]; then
             export $(grep -v '^#' .env  | xargs)
         fi
-        echo "*** 6"        
+        echo "*** 6"     
+
+        env | grep -v '^GITHUB |^ACTIONS_RUNNER' | sort 
 
         env | grep -v ^GITHUB | grep -v ^ACTIONS_RUNNER | sort |
         while IFS='=' read -r key value; do
