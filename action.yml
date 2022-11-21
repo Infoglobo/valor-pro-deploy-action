@@ -56,7 +56,7 @@ runs:
             IMAGE_TAG=$(git log --format="%h" -n 1)
             echo "usando image tag gerada $IMAGE_TAG"
         fi
-                
+        echo "*** 1"        
         IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
 
         rm -rf ./build
@@ -68,6 +68,7 @@ runs:
         AMBIENTE=${AMBIENTE^^}
 
         SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
+        echo "*** 2"        
 
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
@@ -90,6 +91,7 @@ runs:
         if  [ -f .env ]; then
             export $(grep -v '^#' .env  | xargs)
         fi
+        echo "*** 3"        
 
         env | grep -v ^GITHUB | sort |
         while IFS='=' read -r key value; do
