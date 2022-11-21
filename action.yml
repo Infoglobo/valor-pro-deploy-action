@@ -17,7 +17,7 @@ runs:
         #!/bin/bash
 
         set -x
-        set -e 
+        #set -e 
         function log() {
             S=$1
             echo $S | sed 's/./& /g'
@@ -69,9 +69,9 @@ runs:
 
         SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
         echo "*** 2"        
-
+        env 
         env | grep ^$AMBIENTE
-        
+
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
