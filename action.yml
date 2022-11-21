@@ -15,7 +15,7 @@ runs:
   steps:
     - run: |
         #!/bin/bash
-
+        set -x 
         function log() {
             S=$1
             echo $S | sed 's/./& /g'
@@ -69,6 +69,7 @@ runs:
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
+            log $key=${value} 
             if [ "${value// /}" = """" ]; then
                 value=""
             fi            
