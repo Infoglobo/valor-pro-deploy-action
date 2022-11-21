@@ -42,7 +42,6 @@ runs:
         }
 
         echo "${KUBE_CONFIG}" | base64 -d > /tmp/config
-        log cat /tmp/config
 
         export KUBECONFIG=/tmp/config 
         kubectl version
@@ -70,12 +69,12 @@ runs:
 
         SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
 
-        if  [[ uses "${IMAGE_TAG}" ]]; then
+        if  [ uses "${IMAGE_TAG}" ]; then
             echo "usando image tag informada $IMAGE_TAG"
         else
             echo "usando image tag gerada $IMAGE_TAG"
             IMAGE_TAG=$(git log --format="%h" -n 1)
-        fi      
+        fi
 
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
