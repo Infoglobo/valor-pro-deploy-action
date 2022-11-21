@@ -99,11 +99,13 @@ runs:
 
         #env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | sort 
         echo "*** 7"  
-        env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | sort |
+        env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | sort |
         while IFS='=' read -r key value; do
-            log "--> $key : $value " 
-            replace $key $value ./build/deployment.yml
-            log "--> $key : $value " 
+            if [ ! -z "$VAR" ]; then
+              log "--> $key : $value " 
+              replace $key $value ./build/deployment.yml
+              log "<-- $key : $value " 
+            fi
         done 
 
 
