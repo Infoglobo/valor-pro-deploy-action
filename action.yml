@@ -56,58 +56,6 @@ runs:
                 
         IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
 
-        rm -rf ./build
-        mkdir -p ./build
-        cp ./enviroments/deployment.yml ./build/deployment.yml
-
-
-        AMBIENTE=${GITHUB_REF##*/}
-        AMBIENTE=${AMBIENTE^^}
-
-        SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
-
-        if  [[ uses "${IMAGE_TAG}" ]]; then
-            echo "usando image tag informada $IMAGE_TAG"
-        else
-            echo "usando image tag gerada $IMAGE_TAG"
-            IMAGE_TAG=$(git log --format="%h" -n 1)
-        fi      
-
-        env | grep ^$AMBIENTE | 
-        while IFS='=' read -r key value; do
-            key="${key/#${AMBIENTE}_/}"
-            echo $key=${value} >> $SECRET_FILE
-        done 
-
-        kubectl delete secrets ${REPO_NAME} -n valor --ignore-not-found=true
-        if [ -f $SECRET_FILE ]; then
-            kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n valor
-        fi
-
-        PROPERTY_FILE=enviroments/${GITHUB_REF##*/}/cm.properties
-        kubectl delete configmap ${REPO_NAME} -n valor --ignore-not-found=true
-        if  [ -f $PROPERTY_FILE ]; then
-            export $(grep -v '^#' $PROPERTY_FILE  | xargs)
-            kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n valor
-        fi
-
-        if  [ -f .env ]; then
-            export $(grep -v '^#' .env  | xargs)
-        fi
-
-        env | grep -v ^GITHUB | sort |
-        while IFS='=' read -r key value; do
-        
-            replace $key $value $1
-        done 
-
-
-        echo "****"
-        cat ./build/deployment.yml
-        echo "****"
-
-        kubectl version
-        kubectl apply -f ./build/deployment.yml
       shell: bash
       env:
         KUBE_CONFIG: ${{ inputs.kube_config }}
