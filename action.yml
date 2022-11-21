@@ -75,23 +75,25 @@ runs:
             key="${key/#${AMBIENTE}_/}"
             echo $key=${value} >> $SECRET_FILE
         done 
-
+        echo "*** 3"
         kubectl delete secrets ${REPO_NAME} -n valor --ignore-not-found=true
         if [ -f $SECRET_FILE ]; then
             kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n valor
         fi
 
+
+        echo "*** 4"
         PROPERTY_FILE=enviroments/${GITHUB_REF##*/}/cm.properties
         kubectl delete configmap ${REPO_NAME} -n valor --ignore-not-found=true
         if  [ -f $PROPERTY_FILE ]; then
             export $(grep -v '^#' $PROPERTY_FILE  | xargs)
             kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n valor
         fi
-
+        echo "*** 5"  
         if  [ -f .env ]; then
             export $(grep -v '^#' .env  | xargs)
         fi
-        echo "*** 3"        
+        echo "*** 6"        
 
         env | grep -v ^GITHUB | sort |
         while IFS='=' read -r key value; do
