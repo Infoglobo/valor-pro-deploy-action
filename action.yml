@@ -70,9 +70,12 @@ runs:
 
         SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
 
-        if ! [[ uses "${IMAGE_TAG}" ]]; then
-            IMAGE_TAG=$(date +%Y%m%d%H%M%S)
-        fi        
+        if  [[ uses "${IMAGE_TAG}" ]]; then
+            echo "usando image tag informada $IMAGE_TAG"
+        else
+            echo "usando image tag gerada $IMAGE_TAG"
+            IMAGE_TAG=$(git log --format="%h" -n 1)
+        fi      
 
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
