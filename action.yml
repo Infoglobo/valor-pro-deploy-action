@@ -9,12 +9,6 @@ inputs:
   kube_config:
     description: 'Username used to log against the Docker registry'
     required: true
-  password:
-    description: 'Password or personal access token used to log against the Docker registry'
-    required: true
-  host:
-    description: 'Docker registry host'
-    required: true
 
 runs:
   using: "composite"
@@ -60,7 +54,7 @@ runs:
             IMAGE_TAG=$(git log --format="%h" -n 1)
         fi
                 
-        expose IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
+        IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
 
         rm -rf ./build
         mkdir -p ./build
