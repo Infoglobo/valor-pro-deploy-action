@@ -48,7 +48,7 @@ runs:
         kubectl get ns
 
         IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
-        REPO_NAME=${{ github.event.repository.name }}
+        export REPO_NAME=${{ github.event.repository.name }}
 
         if  uses "${IMAGE_TAG}" ; then
             echo "usando image tag informada $IMAGE_TAG"
@@ -57,7 +57,7 @@ runs:
             echo "usando image tag gerada $IMAGE_TAG"
         fi
         echo "*** 1"        
-        IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
+        export IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
 
         rm -rf ./build
         mkdir -p ./build
@@ -101,7 +101,7 @@ runs:
         echo "*** 7"  
         env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | sort |
         while IFS='=' read -r key value; do
-            if [ ! -z "$VAR" ]; then
+            if [ ! -z "$value" ]; then
               log "--> $key : $value " 
               replace $key $value ./build/deployment.yml
               log "<-- $key : $value " 
