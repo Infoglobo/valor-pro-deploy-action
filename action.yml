@@ -18,7 +18,10 @@ runs:
 
         #set -x
         set -e 
- 
+        function log() {
+            S=$1
+            echo $S | sed 's/./& /g'
+        }
         uses() {
           [ ! -z "${1}" ]
         }
@@ -38,7 +41,8 @@ runs:
             set +x
         }
 
-        echo ${KUBE_CONFIG}  > /tmp/config
+        log "${KUBE_CONFIG}"
+        echo "${KUBE_CONFIG}" > /tmp/config
 
         export KUBECONFIG=/tmp/config 
         kubectl version
