@@ -41,7 +41,7 @@ runs:
             set +x
         }
 
-        echo ${KUBE_CONFIG} | base64 -d > /tmp/config
+        echo "${KUBE_CONFIG}" | base64 -d > /tmp/config
         log cat /tmp/config
 
         export KUBECONFIG=/tmp/config 
