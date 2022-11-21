@@ -41,8 +41,8 @@ runs:
             set +x
         }
 
-        log "${KUBE_CONFIG}"
-        echo "${KUBE_CONFIG}" > /tmp/config
+        echo ${KUBE_CONFIG} | base64 -d > /tmp/config
+        log cat /tmp/config
 
         export KUBECONFIG=/tmp/config 
         kubectl version
