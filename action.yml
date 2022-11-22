@@ -71,11 +71,15 @@ runs:
             key="${key/#${AMBIENTE}_/}"
 
             if [ "$key" = "API_EMPRESAS_REDIS_PASSWORD" ]; then
-              log $key
+              echo "***************"
+              echo $key
+              echo "***************"
               log $value
+              echo "***************"
               log "API_EMPRESAS_REDIS_PASSWORD ${value// /}"
+              echo "***************"
             fi            
-             
+             [ "${value// /}" = """" ] 
             if [ "${value// /}" = """" ]; then
                 value=""
             fi            
