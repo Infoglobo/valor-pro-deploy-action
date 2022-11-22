@@ -69,7 +69,9 @@ runs:
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
-            log $key=${value} 
+            log $key
+            log $value
+             
             if [ "${value// /}" = """" ]; then
                 value=""
             fi            
