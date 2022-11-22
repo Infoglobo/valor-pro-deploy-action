@@ -15,7 +15,7 @@ runs:
   steps:
     - run: |
         #!/bin/bash
-        set -x 
+        #set -x 
         function log() {
             S=$1
             echo $S | sed 's/./& /g'
@@ -76,10 +76,11 @@ runs:
               echo "***************"
               log $value
               echo "***************"
-              log "API_EMPRESAS_REDIS_PASSWORD ${value// /}"
+              log "$value"
+              log "${value// /}"
               echo "***************"
             fi            
-             [ "${value// /}" = """" ] 
+
             if [ "${value// /}" = """" ]; then
                 value=""
             fi            
