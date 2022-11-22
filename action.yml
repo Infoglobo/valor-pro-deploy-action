@@ -81,7 +81,8 @@ runs:
               echo "***************"
             fi            
 
-            if [ "${value// /}" = """" ]; then
+            #if [ "${value// /}" = """" ]; then
+            if [ "${value}" = "" ]; then
                 value=""
             fi            
             echo $key=${value} >> $SECRET_FILE
