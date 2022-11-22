@@ -69,8 +69,12 @@ runs:
         env | grep ^$AMBIENTE | 
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
-            log $key
-            log $value
+
+            if [ "$key" = "API_EMPRESAS_REDIS_PASSWORD" ]; then
+              log $key
+              log $value
+              log "API_EMPRESAS_REDIS_PASSWORD ${value// /}"
+            fi            
              
             if [ "${value// /}" = """" ]; then
                 value=""
