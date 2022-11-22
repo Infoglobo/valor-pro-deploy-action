@@ -70,20 +70,28 @@ runs:
         while IFS='=' read -r key value; do
             key="${key/#${AMBIENTE}_/}"
 
-            if [ "$key" = "API_EMPRESAS_REDIS_PASSWORD" ]; then
-              echo "***************"
-              echo $key
-              echo "***************"
-              log $value
-              echo "***************"
-              log "$value"
-              log "${value// /}"
-              echo "***************"
-            fi            
+            #if [ "$key" = "API_EMPRESAS_REDIS_PASSWORD" ]; then
+            #  echo "***************"
+            #  echo $key
+            #  echo "***************"
+            #  log $value
+            #  echo "***************"
+            #  log "$value"
+            #  log "${value// /}"
+            #  echo "***************"
+            #fi            
 
             #if [ "${value// /}" = """" ]; then
             #if [ "${value}" = "" ]; then
             if [ -z "${value}" ]; then
+                echo "***************"
+                echo $key
+                echo "***************"
+                log $value
+                echo "***************"
+                log "$value"
+                log "${value// /}"
+                echo "***************"            
                 value=""
             fi            
             echo $key=${value} >> $SECRET_FILE
