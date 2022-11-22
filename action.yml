@@ -20,4 +20,5 @@ runs:
       env:
         KUBE_CONFIG: ${{ inputs.kube_config }}
         IMAGE_TAG: ${{ inputs.image_tag }} 
+        REPO_NAME: ${{ github.event.repository.name }}
 

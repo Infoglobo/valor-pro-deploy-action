@@ -28,7 +28,7 @@ kubectl version
 kubectl get ns
 
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
-export REPO_NAME=${{ github.event.repository.name }}
+
 
 if  uses "${IMAGE_TAG}" ; then
     echo "usando image tag informada $IMAGE_TAG"
