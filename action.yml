@@ -82,9 +82,7 @@ runs:
               echo "***************"
             fi            
 
-            #if [ "${value// /}" = """" ]; then
-            #if [ "${value}" = "" ]; then
-            if [ -z "${value}" ] || [ ${#value} -lt 2 ]; then
+            if [ -z "${value}" ] || [ ${#value} -lt 3 ]; then
                 echo "***************"
                 echo $key
                 echo "***************"
@@ -93,7 +91,7 @@ runs:
                 log "$value"
                 log "${value// /}"
                 echo "***************"            
-                value=""
+                value= 
             fi            
             echo $key=${value} >> $SECRET_FILE
         done 
