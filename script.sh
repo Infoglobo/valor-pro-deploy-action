@@ -57,16 +57,18 @@ while IFS='=' read -r key value; do
     echo $key=${value} >> $SECRET_FILE
 done 
 
-kubectl delete secrets ${REPO_NAME} -n valor --ignore-not-found=true
+kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl delete secrets ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
 if [ -f $SECRET_FILE ]; then
-    kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n valor
+    kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n $NAMESPACE
 fi
 
 PROPERTY_FILE=enviroments/${GITHUB_REF##*/}/cm.properties
-kubectl delete configmap ${REPO_NAME} -n valor --ignore-not-found=true
+kubectl delete configmap ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
 if  [ -f $PROPERTY_FILE ]; then
     export $(grep -v '^#' $PROPERTY_FILE  | xargs)
-    kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n valor
+    kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n $NAMESPACE
 fi
 
 if  [ -f .env ]; then
@@ -84,5 +86,5 @@ echo "****"
 cat ./build/deployment.yml
 echo "****"
 
-kubectl version
-kubectl apply -f ./build/deployment.yml
+
+kubectl apply -f ./build/deployment.yml -n $NAMESPACE
