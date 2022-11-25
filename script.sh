@@ -21,6 +21,14 @@ function replace(){
     set +x
 }
 
+
+
+export K8S_MIN_REPLICAS=1
+export K8S_MAX_REPLICAS=1
+export K8S_TARGET_CPUUTILIZATIONPERCENTAGE=60
+export K8S_RESOURCES_LIMITS_CPU=500M
+export K8S_RESOURCES_REQUESTS_CPU=200M
+
 echo "${KUBE_CONFIG}" | base64 -d > /tmp/config
 
 export KUBECONFIG=/tmp/config 
