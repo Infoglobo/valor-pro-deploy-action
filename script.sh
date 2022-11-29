@@ -36,9 +36,9 @@ kubectl version
 kubectl get ns
 
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
-APPLICATION_VERSION=$(git log --format="%h" -n 1)
+#APPLICATION_VERSION=$(git log --format="%h" -n 1)
 
-echo "APPLICATION_VERSION=${APPLICATION_VERSION}" >> enviroments/${GITHUB_REF##*/}/cm.properties
+echo "APPLICATION_VERSION=$(git log --format="%h" -n 1)" >> enviroments/${GITHUB_REF##*/}/cm.properties
 
 if  uses "${IMAGE_TAG}" ; then
     echo "usando image tag informada $IMAGE_TAG"
@@ -91,7 +91,8 @@ while IFS='=' read -r key value; do
         replace $key $value ./build/deployment.yml
     fi
 done 
-
+echo "****"
+cat ./enviroments/${GITHUB_REF##*/}/cm.properties
 echo "****"
 cat ./enviroments/deployment.yml
 echo "****"
