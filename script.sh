@@ -93,6 +93,8 @@ while IFS='=' read -r key value; do
 done 
 
 echo "****"
+cat ./enviroments/deployment.yml
+echo "****"
 cat ./build/deployment.yml
 echo "****"
 
