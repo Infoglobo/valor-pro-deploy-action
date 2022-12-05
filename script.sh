@@ -59,7 +59,13 @@ cp ./enviroments/deployment.yml ./build/deployment.yml
 
 
 AMBIENTE=${GITHUB_REF##*/}
-AMBIENTE=${AMBIENTE^^}
+AMBIENTE=${AMBIENTE,,}
+
+if [ "$AMBIENTE" = "merge" ]; then
+    AMBIENTE=${GITHUB_BASE_REF,,}
+fi
+
+echo "AMBIENTE=${AMBIENTE}"
 
 SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
 
