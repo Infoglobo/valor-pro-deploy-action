@@ -42,8 +42,18 @@ if  [ -z "${APPLICATION_VERSION}" ] ; then
     APPLICATION_VERSION=$(git log --format="%h" -n 1)
 fi
 
-echo ""  >> enviroments/${GITHUB_REF##*/}/cm.properties
-echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/${GITHUB_REF##*/}/cm.properties
+
+AMBIENTE=${GITHUB_REF##*/}
+AMBIENTE=${AMBIENTE,,}
+
+if [ "$AMBIENTE" = "merge" ]; then
+    AMBIENTE=${GITHUB_BASE_REF,,}
+fi
+
+echo "AMBIENTE=${AMBIENTE}"
+
+echo ""  >> enviroments/${AMBIENTE##*/}/cm.properties
+echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/${AMBIENTE##*/}/cm.properties
 
 if  uses "${IMAGE_TAG}" ; then
     echo "usando image tag informada $IMAGE_TAG"
@@ -58,16 +68,8 @@ mkdir -p ./build
 cp ./enviroments/deployment.yml ./build/deployment.yml
 
 
-AMBIENTE=${GITHUB_REF##*/}
-AMBIENTE=${AMBIENTE,,}
 
-if [ "$AMBIENTE" = "merge" ]; then
-    AMBIENTE=${GITHUB_BASE_REF,,}
-fi
-
-echo "AMBIENTE=${AMBIENTE}"
-
-SECRET_FILE=enviroments/${GITHUB_REF##*/}/secrets.properties
+SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
 
 env | grep ^$AMBIENTE | 
 while IFS='=' read -r key value; do
@@ -85,7 +87,7 @@ if [ -f $SECRET_FILE ]; then
     kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n $NAMESPACE
 fi
 
-PROPERTY_FILE=enviroments/${GITHUB_REF##*/}/cm.properties
+PROPERTY_FILE=enviroments/${AMBIENTE}/cm.properties
 kubectl delete configmap ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
 if  [ -f $PROPERTY_FILE ]; then
     export $(grep -v '^#' $PROPERTY_FILE  | xargs)
@@ -103,7 +105,7 @@ while IFS='=' read -r key value; do
     fi
 done 
 echo "****"
-cat ./enviroments/${GITHUB_REF##*/}/cm.properties
+cat ./enviroments/${AMBIENTE}/cm.properties
 echo "****"
 cat ./enviroments/deployment.yml
 echo "****"
