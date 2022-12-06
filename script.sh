@@ -71,9 +71,13 @@ cp ./enviroments/deployment.yml ./build/deployment.yml
 
 SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
 
-env | grep ^$AMBIENTE | 
+
+SECRETS_PREFIX=${AMBIENTE^^}
+
+
+env | grep ^$SECRETS_PREFIX | 
 while IFS='=' read -r key value; do
-    key="${key/#${AMBIENTE}_/}"
+    key="${key/#${SECRETS_PREFIX}_/}"
     if [ -z "${value}" ] || [ ${#value} -lt 3 ]; then
         value= 
     fi            
@@ -84,6 +88,7 @@ kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f 
 
 kubectl delete secrets ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
 if [ -s $SECRET_FILE ]; then
+    cat $SECRET_FILE
     kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n $NAMESPACE
 fi
 
