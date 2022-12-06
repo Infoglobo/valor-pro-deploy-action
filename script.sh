@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x 
+set -x 
 function log() {
     S=$1
     echo $S | sed 's/./& /g'
@@ -83,13 +83,13 @@ done
 kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl delete secrets ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
-if [ -f $SECRET_FILE ]; then
+if [ -s $SECRET_FILE ]; then
     kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n $NAMESPACE
 fi
 
 PROPERTY_FILE=enviroments/${AMBIENTE}/cm.properties
 kubectl delete configmap ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
-if  [ -f $PROPERTY_FILE ]; then
+if  [ -s $PROPERTY_FILE ]; then
     export $(grep -v '^#' $PROPERTY_FILE  | xargs)
     kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n $NAMESPACE
 fi
