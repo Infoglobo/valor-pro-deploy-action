@@ -50,8 +50,9 @@ if [ "$AMBIENTE" = "merge" ]; then
     AMBIENTE=${GITHUB_BASE_REF,,}
 fi
 
-echo "AMBIENTE=${AMBIENTE}"
 
+
+SECRETS_PREFIX=${AMBIENTE^^}
 
 if [ "$GITHUB_REF_NAME" = "dev" ] ; then
     SECRETS_PREFIX="DEV"
@@ -60,7 +61,11 @@ elif [ "$GITHUB_REF_NAME" = "homolog" ] ; then
 elif [ "$GITHUB_REF_NAME" = "main" ] ; then
     SECRETS_PREFIX="PRD"
 fi  
+SECRETS_PREFIX=${SECRETS_PREFIX^^}
 
+
+echo "AMBIENTE=${AMBIENTE}"
+echo "SECRETS_PREFIX=${SECRETS_PREFIX}"
 
 echo ""  >> enviroments/${AMBIENTE##*/}/cm.properties
 echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/${AMBIENTE##*/}/cm.properties
@@ -82,12 +87,12 @@ cp ./enviroments/deployment.yml ./build/deployment.yml
 SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
 
 
-SECRETS_PREFIX=${AMBIENTE^^}
 
 
 
 
-SECRETS_PREFIX=${SECRETS_PREFIX^^}
+
+
 
 env | grep ^$SECRETS_PREFIX | 
 while IFS='=' read -r key value; do
