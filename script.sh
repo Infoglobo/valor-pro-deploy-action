@@ -75,6 +75,16 @@ SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
 SECRETS_PREFIX=${AMBIENTE^^}
 
 
+if [ -z "$GITHUB_BASE_REF" ] && [ "$GITHUB_REF_NAME" = "dev" ] ; then
+    SECRETS_PREFIX="DEV"
+elif [ "$GITHUB_BASE_REF" = "homolog" ] ; then
+    SECRETS_PREFIX="HML"
+elif [ "$GITHUB_BASE_REF" = "main" ] ; then
+    SECRETS_PREFIX="PRD"
+fi  
+
+SECRETS_PREFIX=${SECRETS_PREFIX^^}
+
 env | grep ^$SECRETS_PREFIX | 
 while IFS='=' read -r key value; do
     key="${key/#${SECRETS_PREFIX}_/}"
