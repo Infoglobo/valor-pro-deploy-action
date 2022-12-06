@@ -43,7 +43,7 @@ if  [ -z "${APPLICATION_VERSION}" ] ; then
 fi
 
 
-AMBIENTE=${GITHUB_REF##*/}
+AMBIENTE=${GITHUB_REF_NAME##*/}
 AMBIENTE=${AMBIENTE,,}
 
 if [ "$AMBIENTE" = "merge" ]; then
@@ -51,6 +51,16 @@ if [ "$AMBIENTE" = "merge" ]; then
 fi
 
 echo "AMBIENTE=${AMBIENTE}"
+
+
+if [ "$GITHUB_REF_NAME" = "dev" ] ; then
+    SECRETS_PREFIX="DEV"
+elif [ "$GITHUB_REF_NAME" = "homolog" ] ; then
+    SECRETS_PREFIX="HML"
+elif [ "$GITHUB_REF_NAME" = "main" ] ; then
+    SECRETS_PREFIX="PRD"
+fi  
+
 
 echo ""  >> enviroments/${AMBIENTE##*/}/cm.properties
 echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/${AMBIENTE##*/}/cm.properties
@@ -75,13 +85,7 @@ SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
 SECRETS_PREFIX=${AMBIENTE^^}
 
 
-if [ -z "$GITHUB_BASE_REF" ] && [ "$GITHUB_REF_NAME" = "dev" ] ; then
-    SECRETS_PREFIX="DEV"
-elif [ "$GITHUB_BASE_REF" = "homolog" ] ; then
-    SECRETS_PREFIX="HML"
-elif [ "$GITHUB_BASE_REF" = "main" ] ; then
-    SECRETS_PREFIX="PRD"
-fi  
+
 
 SECRETS_PREFIX=${SECRETS_PREFIX^^}
 
