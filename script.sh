@@ -139,8 +139,8 @@ echo "****"
 
 kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
-
+D=`date '+%A %d-%B, %Y %H:%M'`
 set -x
 
 
-curl -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação '*$GITHUB_REPOSITORY*' deployada no ambiente '*$AMBIENTE*' por '*$GITHUB_ACTOR*'.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
+curl -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação *'$GITHUB_REPOSITORY'* deployada no ambiente *'$AMBIENTE'* por *'$GITHUB_ACTOR' as '$D'.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
