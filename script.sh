@@ -138,3 +138,8 @@ echo "****"
 
 
 kubectl apply -f ./build/deployment.yml -n $NAMESPACE
+
+echo "****"
+env | sort
+echo "****"
+env | grep git | sort
