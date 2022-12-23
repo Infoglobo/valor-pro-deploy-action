@@ -139,7 +139,7 @@ echo "****"
 
 kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
-D=$(date '+%d-%m-%Y %H:%M')
+D=$(date '+%d-%m-%Y-%H:%M')
 set -x
 
 
