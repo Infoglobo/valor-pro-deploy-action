@@ -139,8 +139,9 @@ echo "****"
 
 kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
+sleep 5
 D=$(date '+%d-%m-%Y-%H:%M')
-APP_STATUS=$(kubectl get pods -l app=valor-pro-action-test | tail -1 | awk '{print $3}')
+APP_STATUS=$(kubectl get pods -l app=$REPO_NAME | tail -1 | awk '{print $3}')
 set -x
 
 
@@ -153,7 +154,7 @@ curl -v -X POST -H 'Content-type: application/json' --data '
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "*Aplicação publicada*"
+				"text": "Aplicação publicada *'$GITHUB_REPOSITORY'*"
 			}
 		},
 		{
