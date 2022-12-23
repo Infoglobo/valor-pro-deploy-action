@@ -139,10 +139,7 @@ echo "****"
 
 kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
-echo "****"
-env | sort
-echo "****"
-env | grep git | sort
 
+set -x
 curl -X POST --data-urlencode "payload={\"channel\": \"#alteração-ambien
 tes\", \"username\": \"webhookbot\", \"text\": \"Aplicação *$GITHUB_REPOSITORY* deployada no ambiente *$AMBIENTE* por  *$GITHUB_ACTOR*.\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
