@@ -141,7 +141,7 @@ kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
 sleep 5
 D=$(date '+%d-%m-%Y-%H:%M')
-APP_STATUS=$(kubectl get pods -l app=$REPO_NAME | tail -1 | awk '{print $3}')
+APP_STATUS=$(kubectl get pods -l app=$REPO_NAME -n $NAMESPACE | tail -1 | awk '{print $3}')
 set -x
 
 
