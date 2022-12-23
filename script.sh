@@ -143,4 +143,4 @@ kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 set -x
 
 
-curl -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação '*$GITHUB_REPOSITORY*' deployada no ambiente '*$AMBIENTE*' por '*$GITHUB_ACTOR*'.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
+curl -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação '*$GITHUB_REPOSITORY*' deployada no ambiente '*$AMBIENTE*' por '*$GITHUB_ACTOR*'.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
