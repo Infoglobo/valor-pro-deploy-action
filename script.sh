@@ -143,5 +143,5 @@ D=$(date '+%d-%m-%Y %H:%M')
 set -x
 
 
-curl -v -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação *'$GITHUB_REPOSITORY'* deployada no ambiente *'$AMBIENTE'* por *'$GITHUB_ACTOR'* em '$D'.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
+curl -v -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação *'$GITHUB_REPOSITORY'* deployada no ambiente *'$AMBIENTE'* por *'$GITHUB_ACTOR'* em '$D'.", "icon_emoji": ":rocket:"}' $VALOR_PRO_SLACK_WEBHOOK_URL
 
