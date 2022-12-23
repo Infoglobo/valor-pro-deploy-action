@@ -142,5 +142,5 @@ kubectl apply -f ./build/deployment.yml -n $NAMESPACE
 
 set -x
 
-curl -X POST --data-urlencode "payload={\"channel\": \"#alteração-ambientes\", \"username\": \"webhookbot\", \"text\": \"Aplicação *$GITHUB_REPOSITORY* deployada no ambiente *$AMBIENTE* por  *$GITHUB_ACTOR*.\", \"rocket\": \":ghost:\"}" https://hooks.slack.com/services/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
 
+curl -X POST -H 'Content-type: application/json' --data '{"text": Aplicação *$GITHUB_REPOSITORY* deployada no ambiente *$AMBIENTE* por  *$GITHUB_ACTOR*.", "icon_emoji": ":rocket:"}' https://hooks.slack.com/services/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
