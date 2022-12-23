@@ -30,4 +30,5 @@ runs:
         REPO_NAME: ${{ github.event.repository.name }}
         NAMESPACE: ${{ inputs.namespace }}
         GITHUB_ACTOR: ${{ github.actor }}
+        GITHUB_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
