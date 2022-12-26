@@ -21,7 +21,51 @@ function replace(){
     set +x
 }
 
-
+function slack_enunciate(){
+    if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
+        curl -v -X POST -H 'Content-type: application/json' --data '
+        {
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Aplicação publicada *'$GITHUB_REPOSITORY'*"
+                    }
+                },
+                {
+                    "type": "section",
+                    "fields": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Ator:*\n'$GITHUB_ACTOR'"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Versão:*\n'$APPLICATION_VERSION'"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Data/Hora:*\n'$D'"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Commit:*\n'$GITHUB_COMMIT_MESSAGE'."
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Ambiente:*\n'$AMBIENTE'"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": "*Status da Aplicação:*\n'$APP_STATUS'"
+                        }
+                    ]
+                }
+            ]
+        }' $SLACK_WEBHOOK_URL
+    fi
+}
 
 export K8S_MIN_REPLICAS=1
 export K8S_MAX_REPLICAS=1
@@ -147,44 +191,5 @@ set -x
 
 #curl -v -X POST -H 'Content-type: application/json' --data '{"text": "Aplicação *'$GITHUB_REPOSITORY'* deployada no ambiente *'$AMBIENTE'* por *'$GITHUB_ACTOR'* em '$D'.", "icon_emoji": ":rocket:"}' $VALOR_PRO_SLACK_WEBHOOK_URL
 
-curl -v -X POST -H 'Content-type: application/json' --data '
-{
-	"blocks": [
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "Aplicação publicada *'$GITHUB_REPOSITORY'*"
-			}
-		},
-		{
-			"type": "section",
-			"fields": [
-				{
-					"type": "mrkdwn",
-					"text": "*Ator:*\n'$GITHUB_ACTOR'"
-				},
-				{
-					"type": "mrkdwn",
-					"text": "*Versão:*\n'$APPLICATION_VERSION'"
-				},
-				{
-					"type": "mrkdwn",
-					"text": "*Data/Hora:*\n'$D'"
-				},
-				{
-					"type": "mrkdwn",
-					"text": "*Commit:*\n'$GITHUB_COMMIT_MESSAGE'."
-				},
-				{
-					"type": "mrkdwn",
-					"text": "*Ambiente:*\n'$AMBIENTE'"
-				},
-				{
-					"type": "mrkdwn",
-					"text": "*Status da Aplicação:*\n'$APP_STATUS'"
-				}
-			]
-		}
-	]
-}' $VALOR_PRO_SLACK_WEBHOOK_URL
+slack_enunciate
+

@@ -15,7 +15,9 @@ inputs:
   namespace:
     description: 'namespace'
     required: true
-
+  slack_webhook_url:
+    description: 'slack_webhook_url'
+    required: false
 
 runs:
   using: "composite"
@@ -31,4 +33,5 @@ runs:
         NAMESPACE: ${{ inputs.namespace }}
         GITHUB_ACTOR: ${{ github.actor }}
         GITHUB_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
 
