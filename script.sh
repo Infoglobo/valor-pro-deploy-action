@@ -22,6 +22,9 @@ function replace(){
 }
 
 function slack_enunciate(){
+    echo "SLACK_WEBHOOK_URL"
+    log $SLACK_WEBHOOK_URL
+     
     if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
