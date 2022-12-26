@@ -24,7 +24,7 @@ function replace(){
 function slack_enunciate(){
     echo "SLACK_WEBHOOK_URL"
     log $SLACK_WEBHOOK_URL
-     
+
     if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
@@ -85,6 +85,7 @@ kubectl get ns
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
 #APPLICATION_VERSION=$(git log --format="%h" -n 1)
 
+# se a variavel não prenchida na pipeline, usar o commit 
 if  [ -z "${APPLICATION_VERSION}" ] ; then
     APPLICATION_VERSION=$(git log --format="%h" -n 1)
 fi
