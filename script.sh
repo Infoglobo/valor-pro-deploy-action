@@ -32,18 +32,20 @@ function slack_enunciate(){
     echo "SLACK_WEBHOOK_URL"
     log "$SLACK_WEBHOOK_URL"
 
-    #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
-    GITHUB_COMMIT_MESSAGE=$(git show -s --format=%B)
-    #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
-    #A=${GITHUB_COMMIT_MESSAGE//\'/}
-    A=$(sed 's/'\''//g' <<< "$GITHUB_COMMIT_MESSAGE")
-    echo $GITHUB_COMMIT_MESSAGE
-    echo $A
 
-    printf  "\nGITHUB_COMMIT_MESSAGE --> %s\n" "$GITHUB_COMMIT_MESSAGE"
-    printf  "\n                     S--> %s\n" "$A"   
 
-    if [ ! -z ""$SLACK_WEBHOOK_URL"" ]; then
+    if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
+        #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
+        GITHUB_COMMIT_MESSAGE=$(git show -s --format=%B)
+        #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
+        #A=${GITHUB_COMMIT_MESSAGE//\'/}
+        A=$(sed 's/'\''//g' <<< "$GITHUB_COMMIT_MESSAGE")
+        echo $GITHUB_COMMIT_MESSAGE
+        echo $A
+
+        printf  "\nGITHUB_COMMIT_MESSAGE --> %s\n" "$GITHUB_COMMIT_MESSAGE"
+        printf  "\n                     S--> %s\n" "$A"   
+
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
             "blocks": [
