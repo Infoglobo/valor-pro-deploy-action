@@ -35,7 +35,8 @@ function slack_enunciate(){
     #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
     GITHUB_COMMIT_MESSAGE=$(git show -s --format=%B)
     #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
-    A=${GITHUB_COMMIT_MESSAGE//\'/}
+    #A=${GITHUB_COMMIT_MESSAGE//\'/}
+    A=$(sed 's/'\''//g' <<< "$GITHUB_COMMIT_MESSAGE")
     echo $GITHUB_COMMIT_MESSAGE
     echo $A
 
@@ -70,7 +71,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n$A."
+                            "text": "*Commit:*\n'$A'."
                         },
                         {
                             "type": "mrkdwn",
