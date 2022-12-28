@@ -6,8 +6,11 @@ function log() {
 }
 
 function s_sanitizer() {
-    S=$(echo "$1" | xargs)
-    echo $S     
+   #S=$(echo "$1" | xargs)
+   #echo $S     
+   S=$1
+   S=${S/\'/X}
+   return $S     
 }
 
 
