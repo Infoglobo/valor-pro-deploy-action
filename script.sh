@@ -23,9 +23,9 @@ function replace(){
 
 function slack_enunciate(){
     echo "SLACK_WEBHOOK_URL"
-    log $SLACK_WEBHOOK_URL
+    log "$SLACK_WEBHOOK_URL"
 
-    if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
+    if [ ! -z ""$SLACK_WEBHOOK_URL"" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
             "blocks": [
@@ -66,7 +66,7 @@ function slack_enunciate(){
                     ]
                 }
             ]
-        }' $SLACK_WEBHOOK_URL
+        }' "$SLACK_WEBHOOK_URL"
     fi
 }
 
@@ -85,9 +85,20 @@ kubectl get ns
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
 #APPLICATION_VERSION=$(git log --format="%h" -n 1)
 
+
+
+
 # se a variavel não prenchida na pipeline, usar o commit 
 if  [ -z "${APPLICATION_VERSION}" ] ; then
     APPLICATION_VERSION=$(git log --format="%h" -n 1)
+fi
+
+
+GITHUB_REF_NAME=${GITHUB_REF_NAME##*/}
+if [ "$GITHUB_REF_NAME" == "master" ] || [ "$GITHUB_REF_NAME" == "main"  ]; then
+    APPLICATION_VERSION=$(git -c 'versionsort.suffix=-'     ls-remote --exit-code --refs --sort='version:refname' --tags    | tail --lines=1     | cut --delimiter='/' --fields=3)
+else 
+     APPLICATION_VERSION=$(git log --format="%h" -n 1)
 fi
 
 
@@ -106,17 +117,19 @@ if [ "$GITHUB_REF_NAME" = "dev" ] ; then
     SECRETS_PREFIX="DEV"
 elif [ "$GITHUB_REF_NAME" = "homolog" ] ; then
     SECRETS_PREFIX="HML"
-elif [ "$GITHUB_REF_NAME" = "main" ] ; then
+elif [ "$GITHUB_REF_NAME" == "master" ] || [ "$GITHUB_REF_NAME" == "main"  ] ; then
     SECRETS_PREFIX="PRD"
 fi  
 SECRETS_PREFIX=${SECRETS_PREFIX^^}
 
 
-echo "AMBIENTE=${AMBIENTE}"
+echo "AMBIENTE=$AMBIENTE"
+echo "SECRETS_PREFIX=${SECRETS_PREFIX}"
+echo "APPLICATION_VERSION=${APPLICATION_VERSION}"
 echo "SECRETS_PREFIX=${SECRETS_PREFIX}"
 
-echo ""  >> enviroments/${AMBIENTE##*/}/cm.properties
-echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/${AMBIENTE##*/}/cm.properties
+echo ""  >> enviroments/"${AMBIENTE##*/}"/cm.properties
+echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/"${AMBIENTE##*/}"/cm.properties
 
 if  uses "${IMAGE_TAG}" ; then
     echo "usando image tag informada $IMAGE_TAG"
@@ -124,7 +137,7 @@ else
     IMAGE_TAG=$(git log --format="%h" -n 1)
     echo "usando image tag gerada $IMAGE_TAG"
 fi
-export IMAGE_NAME=$IMAGE_BASE_PATH/$REPO_NAME:$IMAGE_TAG       
+export IMAGE_NAME=$IMAGE_BASE_PATH/"$REPO_NAME":$IMAGE_TAG       
 
 rm -rf ./build
 mkdir -p ./build
@@ -132,38 +145,31 @@ cp ./enviroments/deployment.yml ./build/deployment.yml
 
 
 
-SECRET_FILE=enviroments/${AMBIENTE}/secrets.properties
+SECRET_FILE=enviroments/"$AMBIENTE"/secrets.properties
 
 
-
-
-
-
-
-
-
-env | grep ^$SECRETS_PREFIX | 
+env | grep ^"$SECRETS_PREFIX" | 
 while IFS='=' read -r key value; do
     key="${key/#${SECRETS_PREFIX}_/}"
     if [ -z "${value}" ] || [ ${#value} -lt 3 ]; then
         value= 
     fi            
-    echo $key=${value} >> $SECRET_FILE
+    echo "$key"="${value}" >> "$SECRET_FILE"
 done 
 
-kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl delete secrets ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
-if [ -s $SECRET_FILE ]; then
-    cat $SECRET_FILE
-    kubectl create secret generic ${REPO_NAME} --from-env-file=$SECRET_FILE -n $NAMESPACE
+kubectl delete secrets "$REPO_NAME" -n "$NAMESPACE" --ignore-not-found=true
+if [ -s "$SECRET_FILE" ]; then
+    cat "$SECRET_FILE"
+    kubectl create secret generic "$REPO_NAME" --from-env-file="$SECRET_FILE" -n "$NAMESPACE"
 fi
 
-PROPERTY_FILE=enviroments/${AMBIENTE}/cm.properties
-kubectl delete configmap ${REPO_NAME} -n $NAMESPACE --ignore-not-found=true
-if  [ -s $PROPERTY_FILE ]; then
-    export $(grep -v '^#' $PROPERTY_FILE  | xargs)
-    kubectl create configmap ${REPO_NAME} --from-env-file=$PROPERTY_FILE -n $NAMESPACE
+PROPERTY_FILE=enviroments/"$AMBIENTE"/cm.properties
+kubectl delete configmap "$REPO_NAME" -n "$NAMESPACE" --ignore-not-found=true
+if  [ -s "$PROPERTY_FILE" ]; then
+    export $(grep -v '^#' "$PROPERTY_FILE"  | xargs)
+    kubectl create configmap "$REPO_NAME" --from-env-file="$PROPERTY_FILE" -n "$NAMESPACE"
 fi
 
 if  [ -f .env ]; then
@@ -173,11 +179,11 @@ fi
 env | grep -v '^GITHUB' | grep -v '^ACTIONS_' | grep -v '^RUNNER_' | grep -v 'JENKINS' | grep -v 'KUBE_'   | sort |
 while IFS='=' read -r key value; do
     if [ ! -z "$value" ]; then
-        replace $key $value ./build/deployment.yml
+        replace "$key" "$value" ./build/deployment.yml
     fi
 done 
 echo "****"
-cat ./enviroments/${AMBIENTE}/cm.properties
+cat ./enviroments/"$AMBIENTE"/cm.properties
 echo "****"
 cat ./enviroments/deployment.yml
 echo "****"
@@ -185,11 +191,11 @@ cat ./build/deployment.yml
 echo "****"
 
 
-kubectl apply -f ./build/deployment.yml -n $NAMESPACE
+kubectl apply -f ./build/deployment.yml -n "$NAMESPACE"
 
 sleep 5
 D=$(date '+%d-%m-%Y-%H:%M')
-APP_STATUS=$(kubectl get pods -l app=$REPO_NAME -n $NAMESPACE | tail -1 | awk '{print $3}')
+APP_STATUS=$(kubectl get pods -l app="$REPO_NAME" -n "$NAMESPACE" | tail -1 | awk '{print $3}')
 set -x
 
 
