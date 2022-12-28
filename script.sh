@@ -4,6 +4,13 @@ function log() {
     S=$1
     echo $S | sed 's/./& /g'
 }
+
+function s_sanitizer() {
+    S=$(echo "$1" | xargs)
+    echo $S     
+}
+
+
 uses() {
     [ ! -z "${1}" ]
 }
@@ -53,7 +60,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n'$GITHUB_COMMIT_MESSAGE'."
+                            "text": "*Commit:*\n'$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") '."
                         },
                         {
                             "type": "mrkdwn",
