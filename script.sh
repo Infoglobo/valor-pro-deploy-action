@@ -70,7 +70,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n'$A'."
+                            "text": "*Commit:*\n$A."
                         },
                         {
                             "type": "mrkdwn",
