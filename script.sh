@@ -6,11 +6,8 @@ function log() {
 }
 
 function s_sanitizer() {
-   #S=$(echo "$1" | xargs)
-   #echo $S     
-   S=$1
-   S=${S/\'/X}
-   return $S     
+    S=$(echo $1 | xargs)
+    echo $S    
 }
 
 
@@ -37,9 +34,13 @@ function slack_enunciate(){
 
     #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
     GITHUB_COMMIT_MESSAGE=$(git show -s --format=%B)
-    A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
+    #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
+    A=${GITHUB_COMMIT_MESSAGE//\'/}
     echo $GITHUB_COMMIT_MESSAGE
     echo $A
+
+    printf  "\nS--> %s\n" "$GITHUB_COMMIT_MESSAGE"
+    printf  "\nS--> %s\n" "$S"   
 
     if [ ! -z ""$SLACK_WEBHOOK_URL"" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
