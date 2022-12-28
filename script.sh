@@ -60,7 +60,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n'$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") '."
+                            "text": "*Commit:*\n'"$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"'."
                         },
                         {
                             "type": "mrkdwn",
