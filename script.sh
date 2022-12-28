@@ -32,6 +32,8 @@ function slack_enunciate(){
     echo "SLACK_WEBHOOK_URL"
     log "$SLACK_WEBHOOK_URL"
 
+    #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
+    A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
     if [ ! -z ""$SLACK_WEBHOOK_URL"" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
@@ -60,7 +62,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n'"$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"'."
+                            "text": "*Commit:*\n'$A'."
                         },
                         {
                             "type": "mrkdwn",
