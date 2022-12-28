@@ -46,7 +46,7 @@ function slack_enunciate(){
         printf  "\nGITHUB_COMMIT_MESSAGE --> %s\n" "$GITHUB_COMMIT_MESSAGE"
         printf  "\n                     S--> %s\n" "$A"   
 
-        curl -v -X POST -H 'Content-type: application/json' --data '
+        echo '
         {
             "blocks": [
                 {
@@ -86,7 +86,10 @@ function slack_enunciate(){
                     ]
                 }
             ]
-        }' "$SLACK_WEBHOOK_URL"
+        }
+        ' > dummyfile.txt
+        set -x 
+        curl -v -X POST -H 'Content-type: application/json' --data "@dummyfile.txt" "$SLACK_WEBHOOK_URL"
     fi
 }
 
