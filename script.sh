@@ -34,6 +34,9 @@ function slack_enunciate(){
 
     #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
     A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
+    echo $GITHUB_COMMIT_MESSAGE
+    echo $A
+    
     if [ ! -z ""$SLACK_WEBHOOK_URL"" ]; then
         curl -v -X POST -H 'Content-type: application/json' --data '
         {
