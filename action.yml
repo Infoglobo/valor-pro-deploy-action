@@ -18,7 +18,9 @@ inputs:
   slack_webhook_url:
     description: 'slack_webhook_url'
     required: false
-
+  github_token:
+    description: 'github_token'
+    required: false
 runs:
   using: "composite"
   steps:
