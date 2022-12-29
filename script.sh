@@ -107,14 +107,14 @@ export KUBECONFIG=/tmp/config
 kubectl version
 kubectl get ns
 
-
-echo "*********** git"
 sleep 5
+echo "*********** git"
+
  git -c versionsort.suffix=- ls-remote --exit-code --refs --sort=version:refname --tags | tail --lines=1 | cut --delimiter=/ --fields=3 
-sleep 5
+
 
 echo "*********** git"
-
+sleep 5
 
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
 #APPLICATION_VERSION=$(git log --format="%h" -n 1)

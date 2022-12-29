@@ -34,4 +34,4 @@ runs:
         GITHUB_ACTOR: ${{ github.actor }}
         GITHUB_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
-
+        GITHUB_TOKEN: ${{ inputs.github_token }}
