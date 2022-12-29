@@ -88,6 +88,8 @@ function slack_enunciate(){
             ]
         }
         ' > dummyfile.txt
+
+        sed -i "s/[']//g" dummyfile.txt
         set -x 
         curl -v -X POST -H 'Content-type: application/json' --data "@dummyfile.txt" "$SLACK_WEBHOOK_URL"
     fi
@@ -104,6 +106,12 @@ echo "${KUBE_CONFIG}" | base64 -d > /tmp/config
 export KUBECONFIG=/tmp/config 
 kubectl version
 kubectl get ns
+
+
+echo "***********"
+ git -c versionsort.suffix=- ls-remote --exit-code --refs --sort=version:refname --tags | tail --lines=1 | cut --delimiter=/ --fields=3 
+echo "***********"
+
 
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
 #APPLICATION_VERSION=$(git log --format="%h" -n 1)
