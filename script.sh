@@ -142,6 +142,8 @@ elif [ "$GITHUB_REF_NAME" = "homolog" ] ; then
     SECRETS_PREFIX="HML"
 elif [ "$GITHUB_REF_NAME" == "master" ] || [ "$GITHUB_REF_NAME" == "main"  ] ; then
     SECRETS_PREFIX="PRD"
+    #garantir que a pasta seja sempre enviroments/main
+    AMBIENTE="main"
 fi  
 SECRETS_PREFIX=${SECRETS_PREFIX^^}
 
