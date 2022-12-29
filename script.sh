@@ -108,9 +108,12 @@ kubectl version
 kubectl get ns
 
 
-echo "***********"
+echo "*********** git"
+sleep 5
  git -c versionsort.suffix=- ls-remote --exit-code --refs --sort=version:refname --tags | tail --lines=1 | cut --delimiter=/ --fields=3 
-echo "***********"
+sleep 5
+
+echo "*********** git"
 
 
 IMAGE_BASE_PATH=harbor.devops.valorpro.com.br/valor
