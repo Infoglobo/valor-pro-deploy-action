@@ -108,9 +108,11 @@ kubectl version
 kubectl get ns
 
 sleep 5
-echo "*********** git"
-git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
- git -c versionsort.suffix=- ls-remote --exit-code --refs --sort=version:refname --tags | tail --lines=1 | cut --delimiter=/ --fields=3 
+echo "*********** git" 
+
+#git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+git remote -v
+git -c versionsort.suffix=- ls-remote --exit-code --refs --sort=version:refname --tags | tail --lines=1 | cut --delimiter=/ --fields=3 
 
 
 echo "*********** git"
