@@ -92,6 +92,8 @@ function slack_enunciate(){
         ' > dummyfile.txt
 
         sed -i "s/[']//g" dummyfile.txt
+        sed -i "s/\n/ /g" dummyfile.txt
+        sed -i "s/\r/ /g" dummyfile.txt
         cat dummyfile.txt
         set -x 
         curl -v -X POST -H 'Content-type: application/json' --data "@dummyfile.txt" "$SLACK_WEBHOOK_URL"
