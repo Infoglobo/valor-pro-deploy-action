@@ -40,6 +40,8 @@ function slack_enunciate(){
         #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
         #A=${GITHUB_COMMIT_MESSAGE//\'/}
         A=$(sed 's/'\''//g' <<< "$GITHUB_COMMIT_MESSAGE")
+        A=$(sed 's/'\n'//g' <<< "$A")
+        A=$(sed 's/'\r'//g' <<< "$A")
         echo $GITHUB_COMMIT_MESSAGE
         echo $A
 
