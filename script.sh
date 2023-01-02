@@ -37,17 +37,8 @@ function slack_enunciate(){
     if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
         #GITHUB_COMMIT_MESSAGE="$(s_sanitizer $GITHUB_COMMIT_MESSAGE)"
         GITHUB_COMMIT_MESSAGE=$(git show -s --format=%B)
-        #A=$(s_sanitizer "$GITHUB_COMMIT_MESSAGE") 
-        #A=${GITHUB_COMMIT_MESSAGE//\'/}
-        A=$(sed 's/'\''//g' <<< "$GITHUB_COMMIT_MESSAGE")
-        A=$(sed 's/'\n'//g' <<< "$A")
-        A=$(sed 's/'\r'//g' <<< "$A")
         echo $GITHUB_COMMIT_MESSAGE
-        echo $A
-
-        printf  "\nGITHUB_COMMIT_MESSAGE --> %s\n" "$GITHUB_COMMIT_MESSAGE"
-        printf  "\n                     S--> %s\n" "$A"   
-
+ 
         echo '
         {
             "blocks": [
@@ -75,7 +66,7 @@ function slack_enunciate(){
                         },
                         {
                             "type": "mrkdwn",
-                            "text": "*Commit:*\n'$A'."
+                            "text": "*Commit:*\n'$GITHUB_COMMIT_MESSAGE'."
                         },
                         {
                             "type": "mrkdwn",
@@ -91,9 +82,7 @@ function slack_enunciate(){
         }
         ' > dummyfile.txt
 
-        sed -i "s/[']//g" dummyfile.txt
-        sed -i "s/\n/ /g" dummyfile.txt
-        sed -i "s/\r/ /g" dummyfile.txt
+        sed -i $'N;s/[\\n\r\']//g' dummyfile.txt 
         cat dummyfile.txt
         set -x 
         curl -v -X POST -H 'Content-type: application/json' --data "@dummyfile.txt" "$SLACK_WEBHOOK_URL"
