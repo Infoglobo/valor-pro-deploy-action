@@ -160,8 +160,8 @@ SECRETS_PREFIX=${SECRETS_PREFIX^^}
 echo "AMBIENTE=$AMBIENTE"
 echo "SECRETS_PREFIX=${SECRETS_PREFIX}"
 echo "APPLICATION_VERSION=${APPLICATION_VERSION}"
-echo "SECRETS_PREFIX=${SECRETS_PREFIX}"
 
+#garante que o arquivo de properties esta zerado.
 echo ""  >> enviroments/"${AMBIENTE##*/}"/cm.properties
 echo "APPLICATION_VERSION=$APPLICATION_VERSION" >> enviroments/"${AMBIENTE##*/}"/cm.properties
 
@@ -178,7 +178,8 @@ mkdir -p ./build
 cp ./enviroments/deployment.yml ./build/deployment.yml
 
 
-
+#garante que o arquivo de properties esta zerado.
+echo ""  >> enviroments/"${AMBIENTE##*/}"/cm.properties
 SECRET_FILE=enviroments/"$AMBIENTE"/secrets.properties
 
 
@@ -203,6 +204,7 @@ PROPERTY_FILE=enviroments/"$AMBIENTE"/cm.properties
 kubectl delete configmap "$REPO_NAME" -n "$NAMESPACE" --ignore-not-found=true
 if  [ -s "$PROPERTY_FILE" ]; then
     export $(grep -v '^#' "$PROPERTY_FILE"  | xargs)
+    cat "$PROPERTY_FILE"
     kubectl create configmap "$REPO_NAME" --from-env-file="$PROPERTY_FILE" -n "$NAMESPACE"
 fi
 
