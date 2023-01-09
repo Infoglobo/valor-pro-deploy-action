@@ -198,6 +198,7 @@ kubectl delete secrets "$REPO_NAME" -n "$NAMESPACE" --ignore-not-found=true
 if [ -s "$SECRET_FILE" ]; then
     cat "$SECRET_FILE"
     kubectl create secret generic "$REPO_NAME" --from-env-file="$SECRET_FILE" -n "$NAMESPACE"
+    kubectl get secrets valor-pro-identity-api -n "$NAMESPACE" -o json | jq -r '.data|map_values(@base64d)|to_entries[]|"\(.key)=\(.value)"'
 fi
 
 PROPERTY_FILE=enviroments/"$AMBIENTE"/cm.properties
@@ -206,6 +207,8 @@ if  [ -s "$PROPERTY_FILE" ]; then
     export $(grep -v '^#' "$PROPERTY_FILE"  | xargs)
     cat "$PROPERTY_FILE"
     kubectl create configmap "$REPO_NAME" --from-env-file="$PROPERTY_FILE" -n "$NAMESPACE"
+
+    oc get configmaps "$REPO_NAME" -n "$NAMESPACE" -o json | jq -r '.data|to_entries[]|"\(.key)=\(.value)"'
 fi
 
 if  [ -f .env ]; then
